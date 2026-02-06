@@ -191,10 +191,50 @@
   const joy = document.getElementById("joy");
   const knob = document.getElementById("knob");
 
-  // Prevent page scrolling/zoom while playing
-  ["touchstart","touchmove","gesturestart"].forEach(ev => {
-    window.addEventListener(ev, (e) => e.preventDefault(), { passive:false });
+// ✅ iOS-safe: Prevent scroll ONLY on the canvas + joystick (not the whole window)
+function blockScroll(el) {
+  el.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
+  el.addEventListener("touchmove",  (e) => e.preventDefault(), { passive: false });
+}
+blockScroll(canvas);
+blockScroll(joy);
+
+// Audio unlock on user gesture
+function userGestureUnlockAudio() {
+  if (!audioCtx) {
+    ensureAudio();
+    startRomanticMusicIfNeeded();
+  } else if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
+
+// ✅ iOS-safe button handler (use pointerdown, not click)
+const onTap = (el, fn) => {
+  el.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    userGestureUnlockAudio();
+    fn();
   });
+};
+
+// Buttons
+onTap(restartBtn, reset);
+onTap(pauseBtn, () => { paused = !paused; updateHUD(); });
+onTap(tapBtn, dash);
+onTap(sfxBtn, () => setSfxEnabled(!sfxEnabled));
+onTap(musicBtn, () => setMusicEnabled(!musicEnabled));
+onTap(playAgainBtn, reset);
+onTap(closeToastBtn, () => toast.classList.remove("show"));
+
+// Keep canvas tap-to-dash, but don't steal taps from buttons
+canvas.addEventListener("pointerdown", (e) => {
+  if (e.target !== canvas) return;
+  userGestureUnlockAudio();
+  dash();
+});
+
 
   // Utilities
   const rand = (min, max) => Math.random() * (max - min) + min;
