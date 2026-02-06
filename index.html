@@ -912,7 +912,7 @@ canvas.addEventListener("pointerdown", (e) => {
     playTone({ freq: 220, dur: 0.12, type:"sawtooth", gain:0.09, slideTo:110 });
     setTimeout(() => playTone({ freq: 165, dur: 0.14, type:"sawtooth", gain:0.08, slideTo:90 }), 90);
 
-    showToast("Game Over 💥", "You touched a wall. The ball broke!");
+    showToast("Game Over 💥", "You touched a wall. Your broke Siddharth's heart!");
   }
 
   function thornHit() {
@@ -996,7 +996,7 @@ canvas.addEventListener("pointerdown", (e) => {
       paused = true;
       playTone({ freq: 523.25, dur: 0.12, type:"sine", gain:0.12, slideTo:1046.5 });
       setTimeout(() => playTone({ freq: 659.25, dur: 0.14, type:"sine", gain:0.12, slideTo:1318.5 }), 80);
-      showToast("You win! 🌹👑", "You collected 50 roses and claimed the biggest rose. Tap Play again to restart.");
+      showToast("You win! 🌹👑", "You collected 50 roses and now you can claim THE MAIN ROSE 🌹.");
     }
 
     updateHUD();
